@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetRest</title>
     <link rel="stylesheet" href="{{ asset('asset/style.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -13,7 +14,7 @@
 
 <body>
     <header>
-        <div class="logo">Pet Rest</div>
+        <div class="logo"><img src="{{asset ('logo/logo1.png')}}" class="logoImg" alt=""> Pet Rest</div>
         <nav>
             <ul class="nav-links">
                 <li><a href="#home" class="active">Home</a></li>

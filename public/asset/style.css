@@ -54,7 +54,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 5px 30px;
     background-color: #fff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: sticky;
@@ -66,6 +66,13 @@ header {
     font-size: 24px;
     font-weight: 700;
     color: #2196F3;
+    display: flex;
+    width: 20%;
+    align-items: center;
+}
+
+.logoImg {
+    width: 50px;
 }
 
 .nav-links {

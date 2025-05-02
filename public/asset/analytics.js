@@ -300,9 +300,3 @@ function reloadAllCharts() {
 }
 
 // Logout function (will be implemented with backend integration)
-function logout() {
-    if(confirm('Are you sure you want to logout?')){
-        window.location.href = '/login';
-    }
-
-}

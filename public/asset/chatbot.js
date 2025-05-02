@@ -126,7 +126,13 @@ function getChatbotResponse(message) {
         message.includes("cost") ||
         message.includes("how much")
     ) {
-        return "Our prices range from ₱800 to ₱15,500 depending on the location, size, and type of memorial space you're looking for. Would you like to learn about our different options?";
+        return "Our prices range from ₱1,200 to ₱15,500 depending on the location, size, and type of memorial space you're looking for. Would you like to learn about our different options?";
+    } else if (
+        message.includes("Good bye") ||
+        message.includes("bye") ||
+        message.includes("bye bye")
+    ) {
+        return "Good bye! Thanks for visiting PetRest";
     } else if (message.includes("location") || message.includes("where")) {
         return "We have properties in the North, South, East, and West regions. Each offers unique features like meadows, gardens, riverside spots, or shaded areas. Which would you prefer for your pet?";
     } else if (

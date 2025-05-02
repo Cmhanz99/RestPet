@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Memorial Booking</title>
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <link rel="stylesheet" href="{{asset ('css/booking.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -58,7 +59,7 @@
                     <input type="date" id="death_year" name="death_year" placeholder="Eg. 32425" class="form-control" min="1900" max="2025">
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="pet_image">Pet Image</label>
                 <div class="file-upload">

@@ -79,7 +79,8 @@ class UserController extends Controller
         ->map(function ($group) {
             return [
                 'name' => $group->first()->name,
-                'messages' => $group->pluck('message')->toArray()
+                'messages' => $group->pluck('message')->toArray(),
+                'image' => $group->first()->image
             ];
         });
 
@@ -94,7 +95,8 @@ class UserController extends Controller
         ->map(function ($group) {
             return [
                 'name' => $group->first()->name,
-                'messages' => $group->pluck('message')->toArray()
+                'messages' => $group->pluck('message')->toArray(),
+                'image' => $group->first()->image
             ];
         });
         return view('settings', compact('user', 'groupedMessages'));
@@ -115,9 +117,13 @@ class UserController extends Controller
 
     public function reject($id){
         $pet = Pet::find($id);
+        $status = Status::where('lots_id', $pet->lots_id)->first();
+
+        $status->status_acitve = 'Available';
 
         $pet->status = 'rejected';
         $pet->save();
+        $status->save();
 
         return redirect()->back();
     }
@@ -167,7 +173,7 @@ class UserController extends Controller
 
         if($image){
             $imageName = time().'.'.$image->getClientOriginalExtension();
-            $request->image->move('profile', $imageName);
+            $request->image->move('user-profile', $imageName);
 
             $data->image = $imageName;
         }
@@ -209,11 +215,14 @@ class UserController extends Controller
 
     public function form(Request $request){
         $form = new Form();
+        $user_id = session('booking_id');
+        $user = Booking::find($user_id);
 
         $form->name = $request->name;
         $form->email = $request->email;
         $form->phone = $request->phone;
         $form->message = $request->message;
+        $form->image = $user->image;
 
         $form->save();
         return redirect()->back()->with('success', 'Send Successfully');

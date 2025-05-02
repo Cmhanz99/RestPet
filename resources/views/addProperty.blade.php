@@ -6,6 +6,7 @@
     <title>Pet Memorial Garden Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset ('asset/owner.css')}}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <link rel="stylesheet" href="{{asset ('asset/addProperty.css')}}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>

@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Register User</title>
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="flex items-center justify-center min-h-screen bg-gray-100 py-2">
@@ -39,5 +41,15 @@
         </form>
     </div>
 </body>
-
+<script>
+    @if (session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'User registered!',
+        text: '{{ session('success') }}',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6'
+    });
+@endif
+</script>
 </html>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetRest - My Favorites</title>
     <link rel="stylesheet" href="{{ asset('asset/style.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -773,7 +774,7 @@
 
             // Browse button in empty state
             document.querySelector('.browse-btn').addEventListener('click', function() {
-                window.location.href = '/#li';
+                window.location.href = '/user';
             });
 
             // Check if there are visible cards

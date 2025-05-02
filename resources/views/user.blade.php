@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetRest - User Dashboard</title>
+    <title>PetRest - User</title>
     <link rel="stylesheet" href="{{ asset('asset/style.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
     /* User-specific styles to add to style.css */
@@ -481,7 +483,7 @@
 
 <body>
     <header>
-        <a href="#" class="logo">Pet Rest</a>
+        <a href="#" class="logo"><img src="{{asset ('logo/logo1.png')}}" class="logoImg" alt="">Pet Rest</a>
         <nav>
             <ul class="nav-links">
                 <li><a href="#home" class="active">Home</a></li>
@@ -499,7 +501,7 @@
                 <a href="/favorites"><i class="fas fa-heart"></i> My Favorites</a>
                 <a href="/bookingHistory"><i class="fas fa-history"></i> Booking History</a>
                 <a href=""><i class="fas fa-cog"></i> Settings</a>
-                <a href="/loginUser" class="logout">
+                <a onclick="logout()" class="logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
                 {{-- <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -546,8 +548,6 @@
                     <option value="individual">Individual</option>
                     <option value="communal">Communal</option>
                     <option value="private">Private Garden</option>
-                    <option value="wall">Memorial Wall</option>
-                    <option value="cremation">Cremation Service</option>
                 </select>
             </div>
             <div class="filter-item">
@@ -609,8 +609,10 @@
         <form action="/form" method="post" class="contact-form">
             @csrf
             <h2>Contact Us</h2>
-            <input type="text" id="contact-name" name="name" placeholder="Name" value="{{ $user->name }}" readonly>
-            <input type="email" id="contact-email" name="email" placeholder="Email" value="{{ $user->email }}" readonly>
+            <input type="text" id="contact-name" name="name" placeholder="Name" value="{{ $user->name }}"
+                readonly>
+            <input type="email" id="contact-email" name="email" placeholder="Email"
+                value="{{ $user->email }}" readonly>
             <input type="text" id="contact-phone" name="phone" placeholder="Phone" value="">
             <textarea id="contact-message" name="message" placeholder="Message"></textarea>
             <input type="hidden" id="contact-property-id" value="">
@@ -725,8 +727,10 @@
                         <p id="modal-description"></p>
                     </div>
                     <div class="modal-buttons">
-                        <button class="primary-btn book-now-btn" onclick="book({{$lot->id}})" id="book-now-btn">Book Now</button>
-                        <button class="secondary-btn contact-owner-btn" onclick="contact({{$lot->id}})" id="contact-owner-btn">Contact Owner</button>
+                        <button class="primary-btn book-now-btn" onclick="book({{ $lot->id }})"
+                            id="book-now-btn">Book Now</button>
+                        <button class="secondary-btn contact-owner-btn" onclick="contact({{ $lot->id }})"
+                            id="contact-owner-btn">Contact Owner</button>
                     </div>
                 </div>
             </div>
@@ -744,6 +748,22 @@
     <script>
         // Navigation functions
 
+        function logout() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+
         function goMap() {
             window.location.href = '#ma';
         }
@@ -753,7 +773,7 @@
         }
 
         function book(id) {
-           window.location.href = '/book/' + id;
+            window.location.href = '/book/' + id;
         }
 
         function contact(id) {
@@ -767,8 +787,15 @@
 </body>
 
 </html>
-@if(session('success'))
 <script>
-    alert('Message Successfully!');
+    @if (session('success'))
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Message send successfully!',
+            text: '{{ session('message') }}',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6'
+        });
+    @endif
 </script>
-@endif

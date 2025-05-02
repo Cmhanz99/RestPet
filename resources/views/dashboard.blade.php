@@ -7,6 +7,8 @@
     <title>Owner Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('asset/owner.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -191,7 +193,7 @@
             @foreach ($groupedMessages as $messageGroup)
                 <div class="contact"
                     onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
-                    <div class="contact-avatar"></div>
+                    <div class="contact-avatar" style="background-image: url('{{asset ('user-profile/' . $messageGroup['image'])}}')"></div>
                     <div class="contact-info">
                         <p class="contact-name">{{ $messageGroup['name'] }}</p>
                         <small>{{ count($messageGroup['messages']) }} messages</small>
@@ -225,7 +227,19 @@
         }
 
         function logout() {
-            window.location.href = '/login';
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
         }
 
         function showMessage(name, message) {

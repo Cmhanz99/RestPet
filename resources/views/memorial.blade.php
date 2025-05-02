@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memorial Garden Dashboard</title>
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
@@ -198,9 +199,10 @@
                         <div class="amenity-item">
                             {{ $occupy->bookings->name }}
                             <div>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#editPetModal-{{ $occupy->id }}">
+                                <a href="#" data-bs-toggle="modal"
+                                    data-bs-target="#editPetModal-{{ $occupy->id }}">
                                     <i class="fa fa-edit"></i>
-                                  </a>
+                                </a>
                                 <a href="deletePet/{{ $occupy->id }}"><i class="fa fa-trash trash"></i></a>
                             </div>
                         </div>
@@ -285,14 +287,14 @@
 
         <div class="message-contacts">
             @foreach ($groupedMessages as $messageGroup)
-            <div class="contact"
-                onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
-                <div class="contact-avatar"></div>
-                <div class="contact-info">
-                    <p class="contact-name">{{ $messageGroup['name'] }}</p>
-                    <small>{{ count($messageGroup['messages']) }} messages</small>
+                <div class="contact"
+                    onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
+                    <div class="contact-avatar" style="background-image: url('{{asset ('user-profile/' . $messageGroup['image'])}}')"></div>
+                    <div class="contact-info">
+                        <p class="contact-name">{{ $messageGroup['name'] }}</p>
+                        <small>{{ count($messageGroup['messages']) }} messages</small>
+                    </div>
                 </div>
-            </div>
             @endforeach
         </div>
     </div>
@@ -378,7 +380,7 @@
     }
 
     // Modal handling
-       // Modal handling
+    // Modal handling
     document.addEventListener('DOMContentLoaded', function() {
         // Edit button click handler
         document.querySelectorAll('.fa-edit.edit').forEach(function(btn) {
@@ -395,25 +397,24 @@
     });
 
 
-        // Delete button click handler
-        document.querySelectorAll('.fa-trash.trash').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const deleteUrl = this.closest('a').getAttribute('href');
+    // Delete button click handler
+    document.querySelectorAll('.fa-trash.trash').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const deleteUrl = this.closest('a').getAttribute('href');
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = deleteUrl;
-                    }
-                });
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = deleteUrl;
+                }
             });
         });
     });
@@ -438,4 +439,6 @@
             showConfirmButton: false
         });
     @endif
+</script>
+
 </html>

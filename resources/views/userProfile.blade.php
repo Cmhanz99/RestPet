@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PetRest - User Profile</title>
     <link rel="stylesheet" href="{{ asset('asset/style.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -351,7 +352,7 @@
 
 <body>
     <header>
-        <a href="/" class="logo">Pet Rest</a>
+        <a href="/user" class="logo"><img class="logoImg" src="{{asset ('logo/logo1.png')}}" alt=""> Pet Rest</a>
         <nav>
             <ul class="nav-links">
                 <li><a href="/user">Home</a></li>
@@ -390,7 +391,7 @@
         <div class="profile-card">
             <div class="profile-banner"></div>
             <div class="profile-photo-container">
-                <img src="{{ asset('profile/' . $user->image) }}" alt="Profile Photo" class="profile-photo"
+                <img src="{{ asset('user-profile/' . $user->image) }}" alt="Profile Photo" class="profile-photo"
                     id="profile-preview">
                 <label class="profile-photo-upload" for="profile-upload">
                     <i class="fas fa-camera"></i>

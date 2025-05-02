@@ -33,7 +33,7 @@ class LotController extends Controller
                 return redirect()->back()->with('password', 'Incorrect password!');
             }
         }else{
-            return redirect()->back()->with('error', 'User is cannot found!');
+            return redirect()->back()->with('error', 'User is not registered yet!');
         }
     }
 
@@ -76,7 +76,8 @@ class LotController extends Controller
             ->map(function ($group) {
                 return [
                     'name' => $group->first()->name,
-                    'messages' => $group->pluck('message')->toArray()
+                    'messages' => $group->pluck('message')->toArray(),
+                    'image' => $group->first()->image
                 ];
             });
 
@@ -132,7 +133,8 @@ class LotController extends Controller
             ->map(function ($group) {
                 return [
                     'name' => $group->first()->name,
-                    'messages' => $group->pluck('message')->toArray()
+                    'messages' => $group->pluck('message')->toArray(),
+                    'image' => $group->first()->image
                 ];
             });
 
@@ -143,8 +145,17 @@ class LotController extends Controller
         $owner_id = session('owner_id');
         $user = Owner::find($owner_id);
         $lot = Lots::find($id);
+        $message = Form::all();
+        $groupedMessages = $message->groupBy('name')
+        ->map(function ($group) {
+            return [
+                'name' => $group->first()->name,
+                'messages' => $group->pluck('message')->toArray(),
+                'image' => $group->first()->image
+            ];
+        });
 
-        return view('editPlot', compact('user', 'lot'));
+        return view('editPlot', compact('user', 'lot', 'groupedMessages'));
 
     }
 

@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset ('css/analytics.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/analytics.css') }}">
+    <link rel="icon" href="{{ asset('logo/logo1.png') }}">
     <!-- Chart.js CDN for chart visualization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="profile">
-            <div class="profile-img" style="background-image: url({{asset ('profile/'.$user->profile)}});">
+            <div class="profile-img" style="background-image: url({{ asset('profile/' . $user->profile) }});">
             </div>
-            <h3>{{$user->name}}</h3>
+            <h3>{{ $user->name }}</h3>
             <p>Garden Manager</p>
         </div>
 
@@ -92,20 +96,28 @@
                 <div class="stat-icon revenue-icon">
                     <i class="fas fa-peso-sign"></i>
                 </div>
-                <div class="stat-info">
-                    @php
+                @php
+                    // get total revenue for this owner
                     $totalRevenue = App\Models\Payment::whereHas('petPay', function ($query) use ($user) {
-                        $query
-                            ->where('status', 'approved')
-                            ->whereIn('lots_id', function ($subquery) use ($user) {
-                                $subquery->select('id')->from('lots')->where('owner_id', $user->id);
-                            });
+                        $query->where('status', 'approved')->whereIn('lots_id', function ($subquery) use ($user) {
+                            $subquery->select('id')->from('lots')->where('owner_id', $user->id);
+                        });
                     })->sum('payment');
-                    @endphp
+
+                    // set your target revenue for now (example: ₱50000)
+                    $targetRevenue = 50000;
+
+                    // compute the trend percentage
+                    $trendRevenue = $targetRevenue > 0
+                        ? (($totalRevenue - $targetRevenue) / $targetRevenue) * 100
+                        : 0;
+                @endphp
+                <div class="stat-info">
                     <h3>Total Revenue</h3>
-                    <div class="value">{{ number_format($totalRevenue, 2) }}</div>
-                    <div class="trend positive">
-                        <i class="fas fa-arrow-up"></i> +12% vs last period
+                    <div class="value">₱{{ number_format($totalRevenue, 2) }}</div>
+                    <div class="trend {{ $trendRevenue >= 0 ? 'positive' : 'negative' }}">
+                        <i class="fas fa-arrow-{{ $trendRevenue >= 0 ? 'up' : 'down' }}"></i>
+                        {{ number_format($trendRevenue, 2) }}% vs target
                     </div>
                 </div>
             </div>
@@ -113,15 +125,26 @@
                 <div class="stat-icon bookings-icon">
                     <i class="fas fa-calendar-check"></i>
                 </div>
+                  @php
+                    // current total bookings for this owner
+                    $totalBookings = App\Models\Pet::whereHas('lots', function ($query) use ($user) {
+                        $query->where('owner_id', $user->id);
+                    })->count();
+
+                    // set your target bookings for now (example: 20 bookings)
+                    $targetBookings = 20;
+
+                    // compute the trend percentage
+                    $trendBookings = $targetBookings > 0
+                        ? (($totalBookings - $targetBookings) / $targetBookings) * 100
+                        : 0;
+                    @endphp
                 <div class="stat-info">
                     <h3>Bookings</h3>
-                    <div class="value">
-                        {{ App\Models\Pet::whereHas('lots', function ($query) use ($user) {
-                            $query->where('owner_id', $user->id);
-                        })->count() }}
-                    </div>
-                    <div class="trend positive">
-                        <i class="fas fa-arrow-up"></i> +8% vs last period
+                    <div class="value">{{ $totalBookings }}</div>
+                    <div class="trend {{ $trendBookings >= 0 ? 'positive' : 'negative' }}">
+                        <i class="fas fa-arrow-{{ $trendBookings >= 0 ? 'up' : 'down' }}"></i>
+                        {{ number_format($trendBookings, 2) }}% vs target
                     </div>
                 </div>
             </div>
@@ -133,25 +156,36 @@
                     <h3>Occupancy Rate</h3>
                     <div class="value">
                         @php
-                        $ownerId = session('owner_id');
-                        $user = App\Models\Owner::find($ownerId);
+                            $ownerId = session('owner_id');
+                            $user = App\Models\Owner::find($ownerId);
 
-                        // total statuses for this owner's lots
-                        $totalStatuses = App\Models\Status::whereHas('lotsActive', function($query) use ($user) {
-                            $query->where('owner_id', $user->id);
-                        })->count();
+                            // total statuses for this owner's lots
+                            $totalStatuses = App\Models\Status::whereHas('lotsActive', function ($query) use ($user) {
+                                $query->where('owner_id', $user->id);
+                            })->count();
 
-                        // occupied statuses for this owner's lots
-                        $occupiedStatuses = App\Models\Status::whereHas('lotsActive', function($query) use ($user) {
-                            $query->where('owner_id', $user->id);
-                        })->where('status_acitve', 'Occupied')->count();
+                            // occupied statuses for this owner's lots
+                            $occupiedStatuses = App\Models\Status::whereHas('lotsActive', function ($query) use ($user) {
+                                $query->where('owner_id', $user->id);
+                            })->where('status_acitve', 'Occupied')->count();
 
-                        $percentage = $totalStatuses > 0 ? ($occupiedStatuses / $totalStatuses) * 100 : 0;
-                    @endphp
-                    {{ number_format($percentage) }}%
+                            // occupancy percentage
+                            $percentage = $totalStatuses > 0 ? ($occupiedStatuses / $totalStatuses) * 100 : 0;
+
+                            // let's say your target occupancy is 60%
+                            $targetOccupancy = 60;
+
+                            // compute the trend percentage (difference)
+                            $trendPercentage = $targetOccupancy > 0
+                                ? (($percentage - $targetOccupancy) / $targetOccupancy) * 100
+                                : 0;
+                        @endphp
+
+                        {{ number_format($percentage) }}%
                     </div>
-                    <div class="trend positive">
-                        <i class="fas fa-arrow-up"></i> +5% vs last period
+                    <div class="trend {{ $trendPercentage >= 0 ? 'positive' : 'negative' }}">
+                        <i class="fas fa-arrow-{{ $trendPercentage >= 0 ? 'up' : 'down' }}"></i>
+                        {{ number_format($trendPercentage, 2) }}% vs target
                     </div>
                 </div>
             </div>
@@ -161,9 +195,26 @@
                 </div>
                 <div class="stat-info">
                     <h3>Avg. Booking Value</h3>
-                    <div class="value">₱1,120</div>
-                    <div class="trend negative">
-                        <i class="fas fa-arrow-down"></i> -2% vs last period
+                    @php
+                        $totalRevenue = App\Models\Payment::whereHas('petPay', function ($query) use ($user) {
+                            $query->where('status', 'approved')
+                                ->whereIn('lots_id', function ($subquery) use ($user) {
+                                    $subquery->select('id')->from('lots')->where('owner_id', $user->id);
+                                });
+                        })->sum('payment');
+
+                        // let’s say your target is ₱50,000
+                        $targetRevenue = 50000;
+
+                        // compute percentage
+                        $percentageChange = $targetRevenue > 0
+                            ? (($totalRevenue - $targetRevenue) / $targetRevenue) * 100
+                            : 0;
+                    @endphp
+                    <div class="value">₱{{ number_format($totalRevenue, 2) }}</div>
+                    <div class="trend {{ $percentageChange >= 0 ? 'positive' : 'negative' }}">
+                        <i class="fas fa-arrow-{{ $percentageChange >= 0 ? 'up' : 'down' }}"></i>
+                        {{ number_format($percentageChange, 2) }}% vs ₱{{ number_format($targetRevenue) }}
                     </div>
                 </div>
             </div>
@@ -200,6 +251,24 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="{{asset ('asset/analytics.js')}}"></script>
+    <script src="{{ asset('asset/analytics.js') }}"></script>
+    <script>
+        function logout() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>

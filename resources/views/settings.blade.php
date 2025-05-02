@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Settings</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset ('asset/owner.css')}}">
-    <link rel="stylesheet" href="{{asset ('css/settings.css')}}">
+    <link rel="stylesheet" href="{{ asset('asset/owner.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/settings.css') }}">
+    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="profile">
-            <div class="profile-img" style="background-image: url('{{asset ('profile/' . $user->profile)}}')"></div>
+            <div class="profile-img" style="background-image: url('{{ asset('profile/' . $user->profile) }}')"></div>
             <h3>Hanz Christian</h3>
             <p>Garden Manager</p>
         </div>
@@ -40,7 +44,7 @@
             </a>
         </nav>
 
-        <div class="logout">
+        <div onclick="logout()" class="logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
         </div>
@@ -63,7 +67,8 @@
                     <span class="notification-dot"></span>
                 </div>
                 <div class="user-menu">
-                    <div class="user-avatar" style="background-image: url('{{asset ('profile/' . $user->profile)}}')"></div>
+                    <div class="user-avatar" style="background-image: url('{{ asset('profile/' . $user->profile) }}')">
+                    </div>
                     <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
@@ -100,7 +105,8 @@
                     <form class="settings-form">
                         <div class="profile-photo-section">
                             <div class="current-photo">
-                                <div class="avatar-preview" style="background-image:url('{{asset ('profile/'.$user->profile)}}') "></div>
+                                <div class="avatar-preview"
+                                    style="background-image:url('{{ asset('profile/' . $user->profile) }}') "></div>
                             </div>
                             <div class="photo-actions">
                                 <h3>Profile Photo</h3>
@@ -117,19 +123,19 @@
                             </div>
                         </div>
 
-                            <div class="form-group">
-                                <label for="first-name">Full Name</label>
-                                <input type="text" id="first-name" name="first_name" value="{{$user->name}}">
-                            </div>
+                        <div class="form-group">
+                            <label for="first-name">Full Name</label>
+                            <input type="text" id="first-name" name="first_name" value="{{ $user->name }}">
+                        </div>
 
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" value="{{$user->email}}">
+                            <input type="email" id="email" name="email" value="{{ $user->email }}">
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" value="+63{{$user->phone}}">
+                            <input type="tel" id="phone" name="phone" value="+63{{ $user->phone }}">
                         </div>
 
                         <div class="form-group">
@@ -152,7 +158,8 @@
                         <div class="form-group">
                             <label for="current-password">Current Password</label>
                             <div class="password-input">
-                                <input type="password" id="current-password" value="{{$user->password}}" name="current_password">
+                                <input type="password" id="current-password" value="{{ $user->password }}"
+                                    name="current_password">
                                 <button type="button" class="password-toggle">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -335,16 +342,16 @@
         </div>
 
         <div class="message-contacts">
-        @foreach ($groupedMessages as $messageGroup)
-            <div class="contact"
-                onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
-                <div class="contact-avatar"></div>
-                <div class="contact-info">
-                    <p class="contact-name">{{ $messageGroup['name'] }}</p>
-                    <small>{{ count($messageGroup['messages']) }} messages</small>
+            @foreach ($groupedMessages as $messageGroup)
+                <div class="contact"
+                    onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
+                    <div class="contact-avatar" style="background-image: url('{{asset ('user-profile/' . $messageGroup['image'])}}')"></div>
+                    <div class="contact-info">
+                        <p class="contact-name">{{ $messageGroup['name'] }}</p>
+                        <small>{{ count($messageGroup['messages']) }} messages</small>
+                    </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
         </div>
         <div class="overlay" id="overlay"></div>
         <div class="message-dialog" id="messageDialog">
@@ -369,7 +376,19 @@
             }
 
             function logout() {
-                window.location.href = '/login';
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You will be logged out!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, logout!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/login';
+                    }
+                });
             }
 
             function showMessage(name, message) {
@@ -448,4 +467,5 @@
         });
     </script>
 </body>
+
 </html>
