@@ -142,7 +142,9 @@
                     <h3>Booking Status</h3>
                     <div class="stat-boxes">
                         <div class="stat-box occupied-stat">
-                            <h4>{{ App\Models\Pet::where('status', 'approved')->count() }}</h4>
+                            <h4>{{ App\Models\Status::whereHas('lotsActive', function($query){
+                                $query->where('owner_id', session('owner_id'));
+                            })->count() }}</h4>
                             <p>Occupied</p>
                         </div>
                         <div class="stat-box reserved-stat">
@@ -150,7 +152,10 @@
                             <p>Reserved</p>
                         </div>
                         <div class="stat-box available-stat">
-                            <h4>{{ App\Models\Status::where('status_acitve', 'Available')->count() }}</h4>
+                            <h4>{{ App\Models\Status::where('status_acitve', 'Available')
+                                ->whereHas('lotsActive', function($query){
+                                    $query->where('owner_id', session('owner_id'));
+                                })->count() }}</h4>
                             <p>Available</p>
                         </div>
                     </div>

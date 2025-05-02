@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('asset/style.css') }}">
     <link rel="icon" href="{{asset ('logo/logo1.png')}}">
     <!-- Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Simple Booking History Styles */
@@ -237,6 +238,7 @@
             color: #ef4444;
             border-top: 1px solid #e5e7eb;
             margin-top: 5px;
+            cursor: pointer;
         }
 
         .user-profile:hover .user-dropdown {
@@ -365,7 +367,7 @@
                 <a href="/favorites"><i class="fas fa-heart"></i> My Favorites</a>
                 <a href="/bookingHistory" class="active"><i class="fas fa-history"></i> Booking History</a>
                 <a href=""><i class="fas fa-cog"></i> Settings</a>
-                <a href="/loginUser" class="logout">
+                <a onclick="logout()" class="logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </div>
@@ -441,6 +443,21 @@
     </div>
 
     <script>
+           function logout() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/login';
+                }
+            });
+        }
         // Simple dropdown toggle for user menu
         document.addEventListener('DOMContentLoaded', function() {
             // User dropdown toggle

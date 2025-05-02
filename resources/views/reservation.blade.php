@@ -81,8 +81,12 @@
                         <i class="fas fa-hourglass-half"></i>
                     </div>
                     <div class="stat-info">
-                        <h3>Pending Requests</h3>
-                        <p class="stat-value">{{ App\Models\Pet::where('status', 'pending')->count() }}</p>
+                        <h3>Pending</h3>
+                        <p class="stat-value">{{ App\Models\Pet::where('status', 'pending')
+                            ->whereHas('lots', function($query){
+                                $query->where('owner_id', session('owner_id'));
+                            })->count() }}
+                        </p>
                     </div>
                 </div>
 
@@ -92,7 +96,11 @@
                     </div>
                     <div class="stat-info">
                         <h3>Approved Reservations</h3>
-                        <p class="stat-value">{{ App\Models\Pet::where('status', 'approved')->count() }}</p>
+                        <p class="stat-value">{{ App\Models\Pet::where('status', 'approved')
+                            ->whereHas('lots', function($query){
+                                $query->where('owner_id', session('owner_id'));
+                            })->count() }}
+                        </p>
                     </div>
                 </div>
 
@@ -102,7 +110,11 @@
                     </div>
                     <div class="stat-info">
                         <h3>Rejected Requests</h3>
-                        <p class="stat-value">{{ App\Models\Pet::where('status', 'rejected')->count() }}</p>
+                        <p class="stat-value">{{ App\Models\Pet::where('status', 'rejected')
+                            ->whereHas('lots', function($query){
+                                $query->where('owner_id', session('owner_id'));
+                            })->count() }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -111,11 +123,20 @@
             <div class="section-header">
                 <div class="tabs">
                     <button class="tab-btn active">Pending
-                        ({{ App\Models\Pet::where('status', 'pending')->count() }})</button>
+                        ({{ App\Models\Pet::where('status', 'pending')
+                        ->whereHas('lots', function($query){
+                            $query->where('owner_id', session('owner_id'));
+                        })->count() }})</button>
                     <button class="tab-btn">Approved
-                        ({{ App\Models\Pet::where('status', 'approved')->count() }})</button>
+                        ({{ App\Models\Pet::where('status', 'approved')
+                        ->whereHas('lots', function($query){
+                            $query->where('owner_id', session('owner_id'));
+                        })->count() }})</button>
                     <button class="tab-btn">Rejected
-                        ({{ App\Models\Pet::where('status', 'rejected')->count() }})</button>
+                        ({{ App\Models\Pet::where('status', 'rejected')
+                        ->whereHas('lots', function($query){
+                            $query->where('owner_id', session('owner_id'));
+                        })->count() }})</button>
                     <button class="tab-btn">All Reservations ({{ App\Models\Pet::count('status') }})</button>
                 </div>
                 <div class="filter-search">
