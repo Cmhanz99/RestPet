@@ -10,6 +10,7 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -33,7 +34,7 @@
 
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1>PetRest will help you to find a better space for your pet.</h1>
+            <h1><span class="petrest">PetRest</span> will help you to find a better space for your pet.</h1>
             <p>Looking for best properties? Check this out!</p>
             <div class="cta-buttons">
                 <button onclick="goMap()" class="primary-btn">Map View</button>
@@ -47,30 +48,18 @@
         <p>Looking for best memorial gardens? check this out!</p>
 
         <div class="filter">
-            <div class="filter-item">
-                <select>
-                    <option disabled selected>Pet</option>
-                    <option>Dog</option>
-                    <option>Cat</option>
-                    <option>Dinasaur</option>
-                    <option>Hamster</option>
-                    <option>Bird</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <select>
+            <div class="filter-item filter1">
+                <select id="burialTypeSelect">
                     <option disabled selected>Burial Type</option>
-                    <option>Individual</option>
-                    <option>Communal</option>
-                    <option>Private Garden</option>
-                    <option>Memorial Wall</option>
-                    <option>Cremation Service</option>
+                    <option value="individual">Individual</option>
+                    <option value="communal">Communal</option>
+                    <option value="private">Private Garden</option>
                 </select>
             </div>
-            <div class="filter-item">
+            <div class="filter-item filter2">
                 <input type="text" placeholder="Search properties...">
             </div>
-            <div class="filter-item">
+            <div class="filter-item filter3">
                 <button class="search-btn">Search</button>
             </div>
         </div>
@@ -91,7 +80,7 @@
                             <span><i class="fas fa-list"></i> Slots {{ $lot->slots }}</span>
                         </div>
                         <div class="property-buttons">
-                            <button class="details-btn" data-id="{{ $lot->id }}">Details</button>
+                            <button class="details-btn" onclick="detailsLogin()">Details</button>
                             <span class="rating"><i class="fas fa-star"></i> 4.9</span>
                         </div>
                     </div>
@@ -119,7 +108,7 @@
             <input type="email" placeholder="Email">
             <input type="tel" placeholder="Phone">
             <textarea placeholder="Message"></textarea>
-            <button class="submit-btn">Send Message</button>
+            <button class="submit-btn" onclick="detailsLogin()">Send Message</button>
         </div>
     </section>
 
@@ -132,26 +121,26 @@
             <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Listings</a></li>
-                    <li><a href="#">Map</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#li">Listings</a></li>
+                    <li><a href="#ma">Map</a></li>
+                    <li><a href="#con">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h3>Contact</h3>
                 <ul>
-                    <li>Email: info@petrest.com</li>
-                    <li>Phone: (123) 456-7890</li>
-                    <li>Address: 123 Pet Street</li>
+                    <li>Email: hanz@petrest.com</li>
+                    <li>Phone: (+639) 456-7890</li>
+                    <li>Address: Lahug Cebu City</li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h3>Social</h3>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/hanzchristian.g.magbal"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.facebook.com/hanzchristian.g.magbal"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/hanzchristian.g.magbal"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
@@ -181,63 +170,6 @@
             <button id="send-message"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-
-    <!-- Property Details Modal -->
-    <div class="modal" id="property-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-body">
-                <div class="property-gallery">
-                    <img src="https://placehold.co/600x400" alt="Property Image" id="modal-image">
-                </div>
-                <div class="property-info">
-                    <h2 id="modal-title">Property Name</h2>
-                    <p id="modal-location">Location</p>
-                    <div class="property-price" id="modal-price">$150/night</div>
-                    <div class="property-rating">
-                        <span class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </span>
-                        <span id="modal-rating">4.8</span>
-                    </div>
-                    <div class="property-details-wrapper">
-                        <h3>Details</h3>
-                        <div class="property-features-detailed">
-                            <div class="feature">
-                                <i class="fas fa-location"></i>
-                                <span><strong>Location:</strong> <span id="modal-beds"></span></span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-cross"></i>
-                                <span><strong>Includes Marker:</strong> <span id="modal-baths"></span></span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-ruler-combined"></i>
-                                <span><strong>Size:</strong> <span id="modal-size"></span></span>
-                            </div>
-                            <div class="feature">
-                                <i class="fas fa-paw"></i>
-                                <span><strong>Pet Policy:</strong> <span id="modal-pet-policy"></span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="property-description">
-                        <h3>Description</h3>
-                        <p id="modal-description"></p>
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="primary-btn book-now-btn" id="book-now-btn">Book Now</button>
-                        <button class="secondary-btn contact-owner-btn" id="contact-owner-btn">Contact Owner</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript Files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
     <script src="{{ asset('asset/main.js') }}"></script>
@@ -265,7 +197,76 @@
                 window.location.href = '/contact';
             }
         }
+        function detailsLogin(){
+            Swal.fire({
+                icon: 'error',
+                title: 'You must logged in first',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+        }
+        function viewLogin(){
+            Swal.fire({
+                icon: 'error',
+                title: 'You must logged in first',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6'
+            });
+        }
     </script>
-</body>
+   <script>
+    // Get all the necessary elements
+    const burialTypeSelect = document.getElementById('burialTypeSelect'); // Changed to get by ID
+    const searchInput = document.querySelector('.filter-item input[type="text"]');
+    const searchButton = document.querySelector('.search-btn');
+    const propertyCards = document.querySelectorAll('.property-card');
 
+    // Add click event to search button
+    searchButton.addEventListener('click', filterProperties);
+
+    // Main filter function
+    function filterProperties() {
+        // Get the selected burial type and search text
+        const selectedBurialType = burialTypeSelect.value.toLowerCase();
+        const searchText = searchInput.value.toLowerCase();
+
+        // Loop through all property cards
+        propertyCards.forEach(card => {
+            // Get the burial type from the card
+            const cardBurialType = card.querySelector('.property-details p').textContent.split('-')[0].trim().toLowerCase();
+            // Get the title for text search
+            const cardTitle = card.querySelector('.property-details h3').textContent.toLowerCase();
+
+            // Check if card matches both burial type and search criteria
+            let showCard = true;
+
+            // Only apply burial type filter if an option is selected (not the disabled one)
+            if (selectedBurialType && selectedBurialType !== 'burial type') {
+                showCard = cardBurialType.includes(selectedBurialType);
+            }
+
+            // Apply text search filter if there is search text
+            if (searchText !== '') {
+                showCard = showCard && cardTitle.includes(searchText);
+            }
+
+            // Show or hide the card based on filters
+            if (showCard) {
+                card.style.display = '';  // Use default display value
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Clear filters when page loads
+    window.addEventListener('load', function() {
+        burialTypeSelect.selectedIndex = 0;
+        searchInput.value = '';
+        propertyCards.forEach(card => {
+            card.style.display = ''; // Use default display value
+        });
+    });
+</script>
+</body>
 </html>

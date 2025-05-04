@@ -11,4 +11,12 @@ class Booking extends Model
     public function pet(){
         return $this->hasMany(Pet::class, 'booking_id', 'id');
     }
+
+    public function reply(){
+        return $this->hasMany(Reply::class, 'booking_id', 'id');
+    }
+
+    public function form(){
+        return $this->hasMany(Form::class, 'form_id', 'id');
+    }
 }

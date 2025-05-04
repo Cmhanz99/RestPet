@@ -7,7 +7,7 @@
     <title>Owner Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('asset/owner.css') }}">
-    <link rel="icon" href="{{asset ('logo/logo1.png')}}">
+    <link rel="icon" href="{{ asset('logo/logo1.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -188,12 +188,11 @@
         <div class="messages-header">
             <h3>Messages</h3>
         </div>
-
         <div class="message-contacts">
             @foreach ($groupedMessages as $messageGroup)
-                <div class="contact"
-                    onclick="showGroupedMessages('{{ $messageGroup['name'] }}', {{ json_encode($messageGroup['messages']) }})">
-                    <div class="contact-avatar" style="background-image: url('{{asset ('user-profile/' . $messageGroup['image'])}}')"></div>
+                <div class="contact" onclick="message({{$messageGroup['form_id']}})">
+                    <div class="contact-avatar"
+                        style="background-image: url('{{ asset('user-profile/' . $messageGroup['image']) }}')"></div>
                     <div class="contact-info">
                         <p class="contact-name">{{ $messageGroup['name'] }}</p>
                         <small>{{ count($messageGroup['messages']) }} messages</small>
@@ -202,19 +201,6 @@
             @endforeach
         </div>
     </div>
-
-    <!-- Message Dialog -->
-    <div class="overlay" id="overlay"></div>
-    <div class="message-dialog" id="messageDialog">
-        <div class="message-dialog-header">
-            <h3 id="dialogName"></h3>
-            <span class="message-dialog-close" onclick="closeMessage()">&times;</span>
-        </div>
-        <div class="message-dialog-content">
-            <div id="dialogMessages"></div>
-        </div>
-    </div>
-
     <script>
         function deleteLot(id) {
             if (confirm('Are you sure to delete this lot?')) {
@@ -242,37 +228,9 @@
             });
         }
 
-        function showMessage(name, message) {
-            document.getElementById('dialogName').innerText = name;
-            document.getElementById('dialogMessage').innerText = message;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('messageDialog').style.display = 'block';
-        }
-
-        function showGroupedMessages(name, messages) {
-            document.getElementById('dialogName').innerText = name;
-            const messagesContainer = document.getElementById('dialogMessages');
-            messagesContainer.innerHTML = ''; // Clear previous messages
-
-            messages.forEach(message => {
-                const messageElement = document.createElement('p');
-                messageElement.className = 'message-item';
-                messageElement.style.borderBottom = '1px solid #eee';
-                messageElement.style.padding = '10px 0';
-                messageElement.style.margin = '5px 0';
-                messageElement.textContent = message;
-                messagesContainer.appendChild(messageElement);
-            });
-
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('messageDialog').style.display = 'block';
-        }
-
-        function closeMessage() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('messageDialog').style.display = 'none';
+        function message(id){
+            window.location.href = "/ownermessage/" + id;
         }
     </script>
 </body>
-
 </html>

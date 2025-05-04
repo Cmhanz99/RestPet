@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Lots;
 use App\Models\Payment;
 use App\Models\Pet;
+use App\Models\Reply;
 use App\Models\Status;
 use App\Models\Owner;
 use App\Models\Form;
@@ -19,47 +20,61 @@ class UserController extends Controller
         $data = Lots::findOrFail($id);
         return view('book', compact('data'));
     }
-
     public function pets(Request $request, $id){
-        // Get the lot by its ID
-        $lot = Lots::find($id);
+        try {
+            // Validate booking session
+            if (!session('booking_id')) {
+                return redirect()->back()->with('error', 'Booking session not found. Please login again.');
+            }
 
-        // Create new pet record
-        $pet = new Pet();
-        $pet->name = $request->name;
-        $pet->type = $request->type;
-        $pet->description = $request->description;
-        $pet->death_year = $request->death_year;
-        $pet->booking_id = session('booking_id');
-        $pet->lots_id = $lot->id;
-        $pet->date = $request->date;
+            // Get the lot by its ID
+            $lot = Lots::findOrFail($id);
 
-        // Handle image upload
-        if($request->hasFile('image')){
-            $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move('pets', $imageName);
-            $pet->image = $imageName;
+            // Create new pet record
+            $pet = new Pet();
+            $pet->name = $request->name;
+            $pet->type = $request->type;
+            $pet->description = $request->description;
+            $pet->death_year = $request->death_year;
+            $pet->booking_id = session('booking_id');
+            $pet->lots_id = $lot->id;
+            $pet->date = $request->date;
+
+            // Handle image upload
+            if($request->hasFile('image')){
+                $image = $request->file('image');
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move('pets', $imageName);
+                $pet->image = $imageName;
+            }
+
+            // Save pet first to get its id
+            if (!$pet->save()) {
+                throw new \Exception('Failed to save pet record');
+            }
+
+            // Create payment record linked to pet
+            $payment = new Payment();
+            $payment->payment = $lot->price;
+            $payment->pet_id = $pet->id;
+            if (!$payment->save()) {
+                throw new \Exception('Failed to save payment record');
+            }
+
+            $status = Status::where('lots_id', $lot->id)->first();
+            if(!$status){
+                $status = new Status();
+                $status->lots_id = $lot->id;
+                $status->status_acitve = 'available';
+                if (!$status->save()) {
+                    throw new \Exception('Failed to save status record');
+                }
+            }
+
+            return redirect()->back()->with('success', 'Pet and payment has waiting for the owners approval!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to save: ' . $e->getMessage());
         }
-
-        // Save pet first to get its id
-        $pet->save();
-
-        // Create payment record linked to pet
-        $payment = new Payment();
-        $payment->payment = $lot->price;
-        $payment->pet_id = $pet->id;
-        $payment->save();
-
-        $status = Status::where('lots_id', $lot->id)->first();
-        if(!$status){
-            $status = new Status();
-            $status->lots_id = $lot->id;
-            $status->status_acitve = 'available'; // or 'reserved' if you want
-            $status->save();
-        }
-
-        return redirect()->back()->with('success', 'Pet and payment has waiting for the owners approval!');
     }
 
     public function contact(){
@@ -186,7 +201,7 @@ class UserController extends Controller
         $user_id = session('booking_id');
         $user = Booking::find($user_id);
         $lots = Lots::all();
-        // $properties = Lots::where('owner_id', $user_id)->get();
+
         return view('user', compact('user', 'lots'));
     }
 
@@ -223,6 +238,7 @@ class UserController extends Controller
         $form->phone = $request->phone;
         $form->message = $request->message;
         $form->image = $user->image;
+        $form->form_id = $user_id;
 
         $form->save();
         return redirect()->back()->with('success', 'Send Successfully');
@@ -254,4 +270,84 @@ class UserController extends Controller
 
         return redirect()->back()->with('message', 'Deleted Successfully');
     }
+
+    public function reply(Request $request) {
+        $reply = new Reply();
+        $owner_id = session('owner_id');
+        $user = Owner::find($owner_id);
+
+        $reply->name = $user->name;
+        $reply->reply = $request->reply;
+
+        $reply->save();
+
+        return redirect()->back()->with('success', 'Reply sent!');
+    }
+
+    public function message(){
+        $reply = Reply::all();
+        $user_id = session('booking_id');
+        $user = Booking::find($user_id);
+        $owner = Owner::find(1);
+
+        $recent = Reply::orderBy('reply', 'desc')->first();
+        $forms = Form::where('form_id', $user_id)->get();
+
+        // Combine both messages into one collection
+        $messages = collect();
+
+        foreach ($forms as $form) {
+            $messages->push([
+                'type' => 'outgoing',
+                'text' => $form->message,
+                'time' => $form->created_at
+            ]);
+        }
+
+        foreach ($reply as $replies) {
+            $messages->push([
+                'type' => 'incoming',
+                'text' => $replies->reply,
+                'time' => $replies->created_at
+            ]);
+        }
+
+        // Sort messages by time
+        $messages = $messages->sortBy('time');
+
+        // Pass $messages to the view
+        return view('message', compact('messages', 'user', 'owner', 'recent'));
+    }
+    public function ownermessage($id){
+        $reply = Reply::all();
+        $user = Booking::find($id);
+        $recent = Form::where('form_id',$id)->orderBy('message', 'desc')->first();
+        $forms = Form::where('form_id', $id)->get();
+
+        // Combine both messages into one collection
+        $messages = collect();
+
+        foreach ($forms as $form) {
+            $messages->push([
+                'type' => 'incoming',
+                'text' => $form->message,
+                'time' => $form->created_at
+            ]);
+        }
+
+        foreach ($reply as $replies) {
+            $messages->push([
+                'type' => 'outgoing',
+                'text' => $replies->reply,
+                'time' => $replies->created_at
+            ]);
+        }
+
+        // Sort messages by time
+        $messages = $messages->sortBy('time');
+
+        // Pass $messages to the view
+        return view('ownermessage', compact('messages', 'user', 'recent'));
+    }
+
 }

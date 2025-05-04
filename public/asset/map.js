@@ -50,7 +50,7 @@ function initMap() {
             <div class="map-popup">
                 <h3>${name}</h3>
                 <p>${price}</p>
-                <button class="map-details-btn" data-id="${id}">View Details</button>
+                <button class="map-details-btn" onclick = 'viewLogin()' data-id="${id}">View Details</button>
             </div>
         `, {
             closeButton: true,

@@ -75,6 +75,7 @@ class LotController extends Controller
         $groupedMessages = $message->groupBy('name')
             ->map(function ($group) {
                 return [
+                    'form_id' => $group->first()->form_id,
                     'name' => $group->first()->name,
                     'messages' => $group->pluck('message')->toArray(),
                     'image' => $group->first()->image

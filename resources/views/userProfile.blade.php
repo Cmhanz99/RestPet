@@ -86,6 +86,10 @@
             background-color: white;
         }
 
+        .user-profile:hover .user-name i {
+            transform: rotate(180deg);
+        }
+
         .profile-photo-upload input {
             display: none;
         }
@@ -311,6 +315,7 @@
 
         .user-name i {
             margin-left: 5px;
+            transition: transform 0.3s ease;
         }
 
         .user-dropdown {
@@ -369,7 +374,7 @@
                 <a href="/userProfile" class="active"><i class="fas fa-user-circle"></i> My Profile</a>
                 <a href="/favorites"><i class="fas fa-heart"></i> My Favorites</a>
                 <a href="/bookingHistory"><i class="fas fa-history"></i> Booking History</a>
-                <a href=""><i class="fas fa-cog"></i> Settings</a>
+                <a href="/message"><i class="fas fa-message"></i> Messages</a>
                 <a href="/loginUser" class="logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
