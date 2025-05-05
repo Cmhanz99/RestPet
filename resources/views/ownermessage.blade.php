@@ -68,7 +68,7 @@
                 @endif
             @endforeach
             <div id="bottomDiv"></div>
-            <form class="chat-input-container" action="/reply#bottomDiv" method="POST">
+            <form class="chat-input-container" action="/reply/{{$user->id}}#bottomDiv" method="POST">
                 @csrf
                 <input hidden type="text" id="contact-name" name="name" placeholder="Name" value="{{ $user->name }}"
                 readonly>

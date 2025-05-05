@@ -494,12 +494,12 @@
         <div class="user-profile">
             <div class="user-name">
                 {{ $user->name }} <i class="fas fa-chevron-down"></i>
-            </div>
+            </div>  
             <div class="user-dropdown">
                 <a href="/userProfile"><i class="fas fa-user-circle"></i> My Profile</a>
                 <a href="/favorites" class="active"><i class="fas fa-heart"></i> My Favorites</a>
                 <a href="/bookingHistory"><i class="fas fa-history"></i> Booking History</a>
-                <a href=""><i class="fas fa-message"></i> Messages</a>
+                <a href="/message"><i class="fas fa-message"></i> Messages</a>
                 <a href="/loginUser" class="logout">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>

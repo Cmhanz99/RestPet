@@ -126,7 +126,7 @@
 
                                 <div class="form-group">
                                     <label for="slots">Number of Slots *</label>
-                                    <input type="number" id="slots" name="slots" min="1" placeholder="Enter number of slots" required>
+                                    <input type="number" id="slots" name="slots" min="1" max="10" placeholder="Enter number of slots" required>
                                 </div>
                             </div>
 

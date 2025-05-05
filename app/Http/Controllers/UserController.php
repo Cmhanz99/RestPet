@@ -271,13 +271,15 @@ class UserController extends Controller
         return redirect()->back()->with('message', 'Deleted Successfully');
     }
 
-    public function reply(Request $request) {
+    public function reply(Request $request, $id) {
         $reply = new Reply();
         $owner_id = session('owner_id');
         $user = Owner::find($owner_id);
 
         $reply->name = $user->name;
         $reply->reply = $request->reply;
+        $reply->form_id = $id;
+        $reply->user_id = $owner_id;
 
         $reply->save();
 
@@ -285,13 +287,14 @@ class UserController extends Controller
     }
 
     public function message(){
-        $reply = Reply::all();
-        $user_id = session('booking_id');
-        $user = Booking::find($user_id);
-        $owner = Owner::find(1);
+        $userID = session('booking_id');
+        $reply = Reply::where('form_id', $userID)->get();
+        $user = Booking::find($userID);
 
         $recent = Reply::orderBy('reply', 'desc')->first();
-        $forms = Form::where('form_id', $user_id)->get();
+        $forms = Form::where('form_id', $userID)->get();
+
+        $owner = Owner::find(  $reply->first()->user_id);
 
         // Combine both messages into one collection
         $messages = collect();
@@ -319,8 +322,8 @@ class UserController extends Controller
         return view('message', compact('messages', 'user', 'owner', 'recent'));
     }
     public function ownermessage($id){
-        $reply = Reply::all();
         $user = Booking::find($id);
+        $reply = Reply::where('form_id', $id)->get();
         $recent = Form::where('form_id',$id)->orderBy('message', 'desc')->first();
         $forms = Form::where('form_id', $id)->get();
 

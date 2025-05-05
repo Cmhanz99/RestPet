@@ -42,7 +42,7 @@ Route::get('/reject/{id}', [UserController::class, 'reject']);
 Route::post('/form', [UserController::class, 'form']);
 Route::post('/editPet/{id}', [UserController::class, 'updatePet']);
 Route::get('deletePet/{id}', [UserController::class, 'deletePet']);
-Route::post('/reply', [UserController::class, 'reply']);
+Route::post('/reply/{id}', [UserController::class, 'reply']);
 
 
 
