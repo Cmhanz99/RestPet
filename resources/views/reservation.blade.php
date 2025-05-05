@@ -170,10 +170,10 @@
                         </div>
                         <div class="reservation-actions">
                             <button class="action-btn view-btn"><i class="fas fa-eye"></i> View</button>
-                            <a href="/approve/{{ $pet->id }}" class="action-btn approve-btn"><i
-                                    class="fas fa-check"></i>{{ $pet->status == 'approved' ? 'Approved' : '' }}</a>
-                            <a href='/reject/{{ $pet->id }}' class="action-btn reject-btn"><i
-                                    class="fas fa-times"></i> {{ $pet->status == 'rejected' ? 'Rejected' : '' }}</a>
+                            @if ($pet->status == 'pending')
+                                <a href="/approve/{{ $pet->id }}" class="action-btn approve-btn"><i class="fas fa-check"></i>Approved</a>
+                                <a href='/reject/{{ $pet->id }}' class="action-btn reject-btn"><i class="fas fa-times"></i>Rejected</a>
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -230,12 +230,6 @@
         </div>
 
         <script>
-            function deleteLot(id) {
-                if (confirm('Are you sure to delete this lot?')) {
-                    window.location.href = '/delete/' + id;
-                }
-            }
-
             function editLot(id) {
                 window.location.href = '/editLot/' + id;
             }
@@ -324,6 +318,7 @@
                     modal.style.display = 'none';
                 }
             });
+
         </script>
     </div>
     </div>

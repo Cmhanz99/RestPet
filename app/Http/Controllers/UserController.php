@@ -29,13 +29,13 @@ class UserController extends Controller
 
             // Get the lot by its ID
             $lot = Lots::findOrFail($id);
-
             // Create new pet record
             $pet = new Pet();
             $pet->name = $request->name;
             $pet->type = $request->type;
             $pet->description = $request->description;
             $pet->death_year = $request->death_year;
+            $pet->birth_year = $request->birth_year;
             $pet->booking_id = session('booking_id');
             $pet->lots_id = $lot->id;
             $pet->date = $request->date;
@@ -86,7 +86,7 @@ class UserController extends Controller
         $user = Owner::find($owner_id);
         $message = Form::all();
         $ownerLotIds = Lots::where('owner_id', $owner_id)->pluck('id')->toArray();
-         $pets = Pet::whereIn('lots_id', $ownerLotIds)
+        $pets = Pet::whereIn('lots_id', $ownerLotIds)
                ->whereIn('status', ['pending', 'approved', 'rejected'])
                ->get();
 
@@ -167,7 +167,7 @@ class UserController extends Controller
                 session(['booking_id' => $user->id]);
                 return redirect('/user');
             }else{
-                return redirect()->back()->with('password', 'Incorrect password!');
+                return redirect()->back()->withInput()->with('password', 'Incorrect password!');
             }
         }else{
             return redirect()->back()->with('error', 'User is cannot found!');

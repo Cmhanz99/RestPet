@@ -102,7 +102,8 @@
                     <h2 class="section-title">Profile Information</h2>
                     <p class="section-description">Update your personal information and profile photo</p>
 
-                    <form class="settings-form">
+                    <form class="settings-form" method="post" action="">
+                        @csrf
                         <div class="profile-photo-section">
                             <div class="current-photo">
                                 <div class="avatar-preview"
@@ -122,7 +123,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label for="first-name">Full Name</label>
                             <input type="text" id="first-name" name="first_name" value="{{ $user->name }}">
@@ -146,9 +146,8 @@
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
-                    </form>
-                </div>
-
+                     </div>
+                 </form>
                 <!-- Password & Security Section -->
                 <div class="settings-section" id="password-section">
                     <h2 class="section-title">Password & Security</h2>

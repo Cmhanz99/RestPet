@@ -20,7 +20,7 @@
                 @csrf
                 <div class="mb-4">
                     <label for="email" class="block mb-2 text-sm font-medium">Email</label>
-                    <input type="email" name="email" placeholder="Email" class="w-full p-2 bg-gray-200 rounded"
+                    <input type="email" name="email" placeholder="Email" value="{{old('email')}}" class="w-full p-2 bg-gray-200 rounded"
                         required>
                 </div>
 

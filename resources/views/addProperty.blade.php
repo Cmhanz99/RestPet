@@ -139,7 +139,7 @@
                             <div class="form-row two-columns">
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <select type="text" id="marker" name="marker">
+                                        <select type="text" id="marker" name="marker" required>
                                             <option disabled selected>Select Marker</option>
                                             <option value="Includes-Marker">Inlcudes Marker</option>
                                             <option value="No-Marker">No-Marker</option>
@@ -149,7 +149,7 @@
 
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <select type="text" id="status" name="status">
+                                        <select type="text" id="status" name="status" required>
                                             <option disabled selected>Select Status</option>
                                             <option value="Active">Active</option>
                                             <option value="Inactive">Inactive</option>
@@ -160,14 +160,14 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="image">Garden Image</label>
-                                    <input type="file" id="image" name="image" accept="image/*">
+                                    <input type="file" id="image" name="image" accept="image/*" required>
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="description">Garden Description</label>
-                                    <textarea id="description" name="description" placeholder="Enter description of the garden..."></textarea>
+                                    <textarea id="description" name="description" placeholder="Enter description of the garden..." required></textarea>
                                 </div>
                             </div>
                         </div>

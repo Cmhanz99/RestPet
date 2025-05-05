@@ -7,6 +7,7 @@ use App\Models\Owner;
 use App\Models\Pet;
 use App\Models\Status;
 use App\Models\Form;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
 class LotController extends Controller
@@ -30,7 +31,7 @@ class LotController extends Controller
                 session(['owner_id' => $user->id]);
                 return redirect('/dashboard');
             }else{
-                return redirect()->back()->with('password', 'Incorrect password!');
+                return redirect()->back()->withInput()->with('password', 'Incorrect password!');
             }
         }else{
             return redirect()->back()->with('error', 'User is not registered yet!');
@@ -92,6 +93,18 @@ class LotController extends Controller
     }
 
     public function add(Request $request){
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'area' => 'required|string|max:255',
+            'size' => 'required|integer|max:255',
+            'slots' => 'required|integer|min:0|max:255',
+            'price' => 'required|integer|min:0',
+            'marker' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
         $property = new Lots();
 
         $property->title = $request->title;

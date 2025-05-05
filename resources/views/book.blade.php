@@ -51,12 +51,12 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="birth_year">Birth Year</label>
-                    <input type="date" id="birth_year" name="birth_year" placeholder="Eg. 32425" class="form-control" min="1900" max="2025">
+                    <input type="date" id="birth_year" name="birth_year" max="2025-05-06" class="form-control" onchange="updateDeathMin()" required>
                 </div>
 
                 <div class="form-group">
                     <label for="death_year">Death Year</label>
-                    <input type="date" id="death_year" name="death_year" placeholder="Eg. 32425" class="form-control" min="1900" max="2025">
+                    <input type="date" id="death_year" name="death_year" class="form-control" required>
                 </div>
             </div>
 
@@ -68,18 +68,18 @@
                         <span>Click to upload an image</span>
                         <p class="text-muted">Recommended size: 300x300 pixels</p>
                     </label>
-                    <input type="file" id="pet_image" name="image" accept="image/*">
+                    <input type="file" id="pet_image" name="image" accept="image/*" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="description">Description / Memorial Message</label>
-                <textarea id="description" name="description" class="form-control" rows="5" placeholder="Share a special memory or message about your pet..."></textarea>
+                <textarea id="description" name="description" class="form-control" rows="5" placeholder="Share a special memory or message about your pet..." required></textarea>
             </div>
 
             <div class="form-group">
                 <label for="service_date">Service Date (for reservations)</label>
-                <input type="date" id="service_date" name="date" class="form-control">
+                <input type="date" id="service_date" name="date" class="form-control" required>
             </div>
 
             {{-- <input type="hidden" name="status" value="pending">
@@ -97,4 +97,11 @@
         </form>
     </div>
 </body>
+<script>
+    function updateDeathMin(){
+        var birthDate = document.querySelector('#birth_year').value;
+
+        document.querySelector('#death_year').min = birthDate;
+    }
+</script>
 </html>
